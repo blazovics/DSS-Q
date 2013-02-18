@@ -2,15 +2,17 @@
 #include "field.h"
 #include "entity.h"
 #include "place.h"
+#include "targetentity.h"
 #include "swarmentity.h"
 #include "grgentity.h"
 #include "playerentity.h"
 
-#ifdef MARMALADE_UI
+Scene::Scene()
+{
+    srand ( time(NULL) );
 
-#include "Mar_entity.h"
-
-#endif
+    this->field = NULL;
+}
 
 Scene::Scene(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsigned yOffset)
 {
@@ -18,17 +20,14 @@ Scene::Scene(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsign
 
     this->field = new Field(fieldWidth,fieldHeight,20.0,xOffset,yOffset);
 
-    sceneState = gameStateUnitAdd;
-    
-    this->playerEntity = new Entity();
-    this->playerEntity->setCurrentPlace(field->getPlaceAtPosition(Point2i(3,3)));
-    //this->playerEntity->setTargetPlace(field->getPlaceAtPosition(Point2i(17,7)));
-/*
+    this->targetEntity = new TargetEntity();
+    this->targetEntity->setCurrentPlace(field->getPlaceAtPosition(Point2i(3,3)));
+
     SwarmEntity* swarmEntities[12];
 
     for(int i=0; i<12; i++){
         swarmEntities[i] = new SwarmEntity();
-        swarmEntities[i]->setTargetEntity(playerEntity);
+        swarmEntities[i]->setTargetEntity(targetEntity);
         entities.insert(swarmEntities[i]);
 
         swarmEntities[i]->setBrush(QBrush(QColor(40,30*i,34)));
@@ -49,7 +48,7 @@ Scene::Scene(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsign
     swarmEntities[10]->setCurrentPlace(field->getPlaceAtPosition(Point2i(2,8)));
     swarmEntities[11]->setCurrentPlace(field->getPlaceAtPosition(Point2i(25,7)));
 
-*/
+/*
     GRGEntity* grgEntities[12];
 
     for(int i=0; i<12; i++){
@@ -74,6 +73,7 @@ Scene::Scene(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsign
     grgEntities[9]->setCurrentPlace(field->getPlaceAtPosition(Point2i(1,4)));
     grgEntities[10]->setCurrentPlace(field->getPlaceAtPosition(Point2i(2,8)));
     grgEntities[11]->setCurrentPlace(field->getPlaceAtPosition(Point2i(25,7)));
+    */
 
     this->runMode = runModePaused;
 }
@@ -88,12 +88,42 @@ void Scene::setRunMode(SceneRunMode runMode)
      return this->runMode;
  }
 
+ set<Entity*> Scene::getEntities()
+ {
+     return this->entities;
+ }
+
+ TargetEntity* Scene::getTargetEntity()
+ {
+     return this->targetEntity;
+ }
+
+ void Scene::setField(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsigned yOffset)
+ {
+     if(this->field != NULL)
+     {
+        delete this->field;
+     }
+     this->field = new Field(fieldWidth,fieldHeight,20.0,xOffset,yOffset);
+
+#ifdef QT_UI
+     if(field != NULL)
+     {
+         field->setPainter(painter);
+     }
+#endif
+
+ }
+
 #ifdef QT_UI
 
 void Scene::setPainter(QPainter *painter){
     this->painter = painter;
 
-    field->setPainter(painter);
+    if(field != NULL)
+    {
+        field->setPainter(painter);
+    }
 
     set<Entity*>::iterator it;
 
@@ -102,7 +132,7 @@ void Scene::setPainter(QPainter *painter){
         ((Entity*)*it)->setPainter(painter);
     }
 
-    this->playerEntity->setPainter(painter);
+    this->targetEntity->setPainter(painter);
 }
 
 #endif
@@ -110,6 +140,14 @@ void Scene::setPainter(QPainter *painter){
 Scene::~Scene()
 {
     delete field;
+    set<Entity*>::iterator it;
+
+    delete targetEntity;
+
+    for ( it=entities.begin() ; it != entities.end(); it++ )
+    {
+        delete ((Entity*)*it);
+    }
 }
 
 Field *Scene::getField()
@@ -132,6 +170,40 @@ void Scene::handleTouchEvent(Point2i touchPoint)
 
 }
 
+void Scene::addEntityAtPosition(int type, Point2i point)
+{
+    Place* place = this->field->getPlaceForTouchPoint(point);
+
+    if(place->getEntity() != NULL)
+        return;
+
+    Entity* newEntity = NULL;
+
+    switch(type)
+    {
+    case SWARM_ENTITY:
+        newEntity = new SwarmEntity();
+        ((SwarmEntity*)newEntity)->setTargetEntity(targetEntity);
+        break;
+    case GRG_ENTITY:
+        newEntity = new GRGEntity();
+        ((GRGEntity*)newEntity)->setTargetEntity(targetEntity);
+        break;
+    case TARGET_ENTITY:
+        newEntity = new TargetEntity();
+#ifdef QT_UI
+        newEntity->setBrush(QBrush(QColor(255,70,34)));
+#endif
+        break;
+    }
+
+    if(newEntity != NULL)
+    {
+        this->entities.insert(newEntity);
+        newEntity->setCurrentPlace(place);
+    }
+}
+
 void Scene::addSwarmEntityAtPosition(Point2i point)
 {
 
@@ -141,7 +213,7 @@ void Scene::addSwarmEntityAtPosition(Point2i point)
         return;
 
     SwarmEntity* swarmEntity = new SwarmEntity();
-    swarmEntity->setTargetEntity(playerEntity);
+    swarmEntity->setTargetEntity(targetEntity);
     this->entities.insert(swarmEntity);
 
     swarmEntity->setBrush(QBrush(QColor(40,70,34)));
@@ -152,7 +224,8 @@ void Scene::addSwarmEntityAtPosition(Point2i point)
 
 void Scene::Step()
 {
-
+    if(this->field == NULL)
+        return;
 
     set<Entity*>::iterator it;
 
@@ -167,7 +240,6 @@ void Scene::Step()
     if(isAnimating || (this->runMode != runModeContinous && this->runMode != runModeStepping))
         return;
 
-
     //Move the others
 
     this->field->cleanNextEntities();
@@ -177,7 +249,6 @@ void Scene::Step()
         ((Entity*)*it)->Step();
     }
 
-    /*
     for ( it=entities.begin() ; it != entities.end(); it++ )
     {
         Place* desiredPlace = ((Entity*)*it)->getDesiredPlace();
@@ -187,7 +258,7 @@ void Scene::Step()
     for ( it=entities.begin() ; it != entities.end(); it++ )
     {
         ((Entity*)*it)->AfterStep();
-    }*/
+    }
 
     for ( it=entities.begin() ; it != entities.end(); it++ )
     {
@@ -203,19 +274,8 @@ void Scene::Step()
 
 void Scene::Draw(float dTime)
 {
-#ifdef MARMALADE_UI
-    
-    // Clear screen
-	Iw2DSurfaceClear(0xff000000);
-    
-	// Draw the games sprite objects
-	field->Draw(dTime);
-    
-	// Show surface
-	Iw2DSurfaceShow();
-
-#endif
-       
-    field->Draw(dTime);
-
+    if(field != NULL)
+    {
+        field->Draw(dTime);
+    }
 }

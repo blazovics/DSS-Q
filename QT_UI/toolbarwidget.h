@@ -12,6 +12,8 @@ class ToolBarWidget : public QWidget
     QPushButton* pauseButton;
     QPushButton* stepButton;
     QPushButton* stopButton;
+    QPushButton* saveButton;
+    QPushButton* loadButton;
 
 public:
     explicit ToolBarWidget(QWidget *parent = 0);
@@ -20,6 +22,8 @@ public:
     QPushButton* getPauseButton();
     QPushButton* getStepButton();
     QPushButton* getStopButton();
+    QPushButton* getSaveButton();
+    QPushButton* getLoadButton();
     
 signals:
     
@@ -29,6 +33,8 @@ public slots:
     void pausePressed();
     void stepPressed();
     void stopPressed();
+    void savePressed();
+    void loadPressed();
     
 };
 

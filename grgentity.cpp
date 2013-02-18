@@ -8,6 +8,11 @@ GRGEntity::GRGEntity() : Entity()
     this->rotationStartPlace = NULL;
 }
 
+int GRGEntity::getType()
+{
+    return GRG_ENTITY;
+}
+
 void GRGEntity::setTargetEntity(Entity* targetEntity)
 {
     this->targetEntity = targetEntity;

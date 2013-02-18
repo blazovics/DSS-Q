@@ -23,6 +23,7 @@ public:
     void Step();
     void AfterStep();
     void Draw(float dTime);
+    int getType();
 
 };
 

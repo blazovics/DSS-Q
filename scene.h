@@ -8,14 +8,7 @@ using namespace std;
 
 class Field;
 class Entity;
-class PlayerEntity;
-
-typedef enum
-{
-    gameStateUnitAdd,
-    gameStateUnitSelect,
-    gameStateUnitDestination
-}SceneState;
+class TargetEntity;
 
 typedef enum
 {
@@ -28,9 +21,8 @@ class Scene
 {
     Field* field;
     set<Entity*> entities;
-    Entity* playerEntity;
-    
-    SceneState sceneState;
+    TargetEntity* targetEntity;
+
     Entity* selectedEntity;
 
     SceneRunMode runMode;
@@ -42,9 +34,19 @@ public:
 #endif
 
 public:
+    Scene();
     Scene(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset = 0, unsigned yOffset = 0);
+
+    void setField(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset = 0, unsigned yOffset = 0);
+
+    void addEntityAtPosition(int type, Point2i point);
+
     void addSwarmEntityAtPosition(Point2i point);
+
     void handleTouchEvent(Point2i touchPoint);
+
+    set<Entity*> getEntities();
+    TargetEntity* getTargetEntity();
 
     Field* getField();
 

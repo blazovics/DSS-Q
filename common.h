@@ -5,6 +5,10 @@
 
 #define MAX_DISTANCE 1000000
 
+#define TARGET_ENTITY 0
+#define SWARM_ENTITY 1
+#define GRG_ENTITY 2
+
 #include "maths.h"
 
 #include <math.h>

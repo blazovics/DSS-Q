@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     renderobject.cpp \
     swarmentity.cpp \
     grgentity.cpp \
-    QT_UI/toolbarwidget.cpp
+    QT_UI/toolbarwidget.cpp \
+    targetentity.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -38,4 +39,5 @@ HEADERS += \
     renderobject.h \
     swarmentity.h \
     grgentity.h \
-    QT_UI/toolbarwidget.h
+    QT_UI/toolbarwidget.h \
+    targetentity.h

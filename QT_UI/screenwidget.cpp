@@ -1,11 +1,20 @@
 #include "screenwidget.h"
 #include "../scene.h"
 #include "../field.h"
+#include "../entity.h"
+#include "../place.h"
+#include "../targetEntity.h"
 #include <QTimer>
 #include <QPushButton>
 #include <QDebug>
 #include <QMouseEvent>
 
+#include <QFile>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTextStream>
+#include <QTranslator>
+#include <QObject>
 
 ScreenWidget::ScreenWidget(QWidget *parent) :
     QWidget(parent)
@@ -58,31 +67,90 @@ void ScreenWidget::stopPressed()
     this->scene->setRunMode(runModePaused);
 }
 
+void ScreenWidget::savePressed()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Scene"), "",tr("DSS XML Scene File (*.xml);;All Files (*)"));
+
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+    else
+    {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QMessageBox::information(this, tr("Unable to open file"), file.errorString());
+            return;
+        }
+
+        QTextStream out(&file);
+
+        Field* currentField = this->scene->getField();
+        out<<"<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>"<<"\n";
+        out<<"<scene>"<<"\n";
+        out<<"\t"<<"<field>"<<"\n";
+        out<<"\t"<<"\t"<<"<width>"<<currentField->getWidth()<<"</width>"<<"\n";
+        out<<"\t"<<"\t"<<"<height>"<<currentField->getHeight()<<"</height>"<<"\n";
+        out<<"\t"<<"</field>"<<"\n";
+
+        TargetEntity* currentTarget = this->scene->getTargetEntity();
+
+        out<<"\t"<<"<targetEntity>"<<"\n";
+
+            Point2i pos = currentTarget->getCurrentPlace()->getPosition();
+
+        out<<"\t"<<"\t"<<"<x>"<<pos.x<<"</x>"<<"\n";
+        out<<"\t"<<"\t"<<"<y>"<<pos.y<<"</y>"<<"\n";
+
+        out<<"\t"<<"</targetEntity>"<<"\n";
+
+        set<Entity*> currentEntities = this->scene->getEntities();
+
+        set<Entity*>::iterator it;
+
+        out<<"\t"<<"<entities>"<<"\n";
+        for ( it=currentEntities.begin() ; it != currentEntities.end(); it++ )
+        {
+            out<<"\t"<<"\t"<<"<entity>"<<"\n";
+            out<<"\t"<<"\t"<<"\t"<<"<type>"<<((Entity*)*it)->getType()<<"</type>"<<"\n";
+
+            Point2i pos = ((Entity*)*it)->getCurrentPlace()->getPosition();
+
+            out<<"\t"<<"\t"<<"\t"<<"<x>"<<pos.x<<"</x>"<<"\n";
+            out<<"\t"<<"\t"<<"\t"<<"<y>"<<pos.y<<"</y>"<<"\n";
+
+            out<<"\t"<<"\t"<<"</entity>"<<"\n";
+
+        }
+        out<<"\t"<<"</entities>"<<"\n";
+        out<<"</scene>";
+    }
+}
+
+void ScreenWidget::loadPressed()
+{
+
+}
+
 void ScreenWidget::setScene(Scene *scene){
     this->scene = scene;
-
     Field* sceneField = scene->getField();
 
-    unsigned width = sceneField->getWidth()*sqrt(3)*sceneField->getUnit()+20;
-    unsigned height = sceneField->getHeight()*1.5*sceneField->getUnit();
+    unsigned width = 800;
+    unsigned height = 600;
+
+    if(sceneField != NULL)
+    {
+        width = sceneField->getWidth()*sqrt(3)*sceneField->getUnit()+20;
+        height = sceneField->getHeight()*1.5*sceneField->getUnit();
+    }
 
     this->setGeometry(0,0,width,height);
 }
 
 void ScreenWidget::paintEvent(QPaintEvent * /* event */)
  {
-
-    /*
-     QRect rect(10, 20, 80, 60);
-
-     QPainterPath path;
-     path.moveTo(20, 80);
-     path.lineTo(20, 30);
-     path.cubicTo(80, 0, 50, 50, 80, 80);
-
-     int startAngle = 20 * 16;
-     int arcLength = 120 * 16;
-*/
      QPainter painter(this);
 
      painter.setPen(QPen(QColor(100,100,100)));
@@ -93,29 +161,6 @@ void ScreenWidget::paintEvent(QPaintEvent * /* event */)
      scene->setPainter(&painter);
      scene->Step();
      scene->Draw();
-
-     /*
-     for (int x = 0; x < width(); x += 100) {
-         for (int y = 0; y < height(); y += 100) {
-             painter.save();
-             painter.translate(x, y);
-
-             painter.translate(50, 50);
-             painter.rotate(60.0);
-             painter.scale(0.6, 0.9);
-             painter.translate(-50, -50);
-
-             painter.drawPolygon(points, 4);
-             painter.restore();
-         }
-     }*/
-
-/*
-     painter.setRenderHint(QPainter::Antialiasing, false);
-     painter.setPen(palette().dark().color());
-     painter.setBrush(Qt::NoBrush);
-     painter.drawRect(QRect(0, 0, width() - 1, height() - 1));
-*/
 }
 
 void ScreenWidget::updateCaption(){

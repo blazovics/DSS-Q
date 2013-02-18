@@ -8,6 +8,11 @@ SwarmEntity::SwarmEntity() : Entity()
     this->targetDistance = 0;
 }
 
+int SwarmEntity::getType()
+{
+    return SWARM_ENTITY;
+}
+
 void SwarmEntity::setTargetEntity(Entity* targetEntity)
 {
     this->targetEntity = targetEntity;
@@ -67,6 +72,7 @@ void SwarmEntity::Step()
     neighborType nextNeighbor;
 
     //circulation only
+
     if(nType < 6)
     {
         neighborType lookAtN = (neighborType)nType;
@@ -94,6 +100,7 @@ void SwarmEntity::Step()
             }
         }
     }
+
     else if(nType > 6)
     {
         if(headingDir == rightHeading)
@@ -166,7 +173,7 @@ void SwarmEntity::Step()
             }
         }
         else
-        {
+        {   
             if(nType == l_tl_Neighbor)
             {
                 if(currentPlace->getNeighbor(bottomRightNeighbor)->getEntity() == NULL)
@@ -269,7 +276,7 @@ void SwarmEntity::AfterStep()
     if(this->currentPlace == this->desiredPlace)
         std::cout<<"CRITICAL ERROR!"<<std::endl;
 
-    if(desiredTargetDistance<this->targetDistance || targetDistance == 1 || nType < 6)
+    if(desiredTargetDistance < this->targetDistance || targetDistance == 1)
     {
         return;
     }
@@ -288,6 +295,10 @@ void SwarmEntity::AfterStep()
     headingDir = this->calculateHeadingDirection();
 
     neighborType nextNeighbor;
+
+    //for the edge test
+    neighborhoodType nfType;
+    unsigned dist;
 
     if(headingDir == rightHeading)
     {
@@ -373,7 +384,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(rightNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = rightNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(rightNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = topRightNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = rightNeighbor;
+                }
             }
             else
             {
@@ -384,7 +404,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(bottomRightNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = bottomRightNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(bottomRightNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = rightNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = bottomRightNeighbor;
+                }
             }
             else
             {
@@ -395,7 +424,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(bottomLeftNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = bottomLeftNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(bottomLeftNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = bottomRightNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = bottomLeftNeighbor;
+                }
             }
             else
             {
@@ -406,7 +444,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(leftNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = leftNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(leftNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = bottomLeftNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = leftNeighbor;
+                }
             }
             else
             {
@@ -417,7 +464,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(topLeftNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = topLeftNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(topLeftNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = leftNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = topLeftNeighbor;
+                }
             }
             else
             {
@@ -428,7 +484,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(topRightNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = topRightNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(topRightNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = topLeftNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = topRightNeighbor;
+                }
             }
             else
             {
@@ -511,8 +576,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(bottomRightNeighbor)->getNextEntity() == NULL)
             {
+                Place::entityDistance(currentPlace->getNeighbor(bottomRightNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
 
-                nextNeighbor = bottomRightNeighbor;
+                if(nfType < 6)
+                {
+                    nextNeighbor = bottomLeftNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = bottomRightNeighbor;
+                }
             }
             else
             {
@@ -523,7 +596,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(bottomLeftNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = bottomLeftNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(bottomLeftNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = leftNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = bottomLeftNeighbor;
+                }
             }
             else
             {
@@ -534,7 +616,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(leftNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = leftNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(leftNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = topLeftNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = leftNeighbor;
+                }
             }
             else
             {
@@ -545,7 +636,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(topLeftNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = topLeftNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(topLeftNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = topRightNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = topLeftNeighbor;
+                }
             }
             else
             {
@@ -556,7 +656,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(topRightNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = topRightNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(topRightNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = rightNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = topRightNeighbor;
+                }
             }
             else
             {
@@ -567,7 +676,16 @@ void SwarmEntity::AfterStep()
         {
             if(currentPlace->getNeighbor(rightNeighbor)->getNextEntity() == NULL)
             {
-                nextNeighbor = rightNeighbor;
+                Place::entityDistance(currentPlace->getNeighbor(rightNeighbor),this->targetEntity->getCurrentPlace(),dist,nfType);
+
+                if(nfType < 6)
+                {
+                    nextNeighbor = bottomRightNeighbor;
+                }
+                else
+                {
+                    nextNeighbor = rightNeighbor;
+                }
             }
             else
             {

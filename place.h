@@ -4,6 +4,8 @@
 #include "common.h"
 #include "renderobject.h"
 
+using namespace std;
+
 class Field;
 class Entity;
 
@@ -73,6 +75,8 @@ public:
     static void entityDistance(Place* firstPlace, Place* secondPlace, unsigned& distance, neighborhoodType& nType);
 
     void Draw(float dTime);
+
+    void serialize(ostream &os);
 };
 
 #endif // PLACE_H

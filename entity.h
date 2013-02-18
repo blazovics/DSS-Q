@@ -4,6 +4,8 @@
 #include "common.h"
 #include "renderobject.h"
 
+using namespace std;
+
 class Place;
 
 class Entity : public RenderObject
@@ -37,6 +39,7 @@ public:
     virtual void AfterStep();
     virtual void Animate();
     virtual void PrepareForAnimation(Place* previousPlace, Place* nextPlace);
+    virtual int getType() = 0;
 };
 
 #endif // ENTITY_H

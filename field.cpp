@@ -164,11 +164,6 @@ bool Field::getPathBetweenPlaces(Place* startPlace,Place* destPlace, Place*** ro
                 continue;
             Place* curPlace = &placeArray[i*width+j];
             
-#ifdef MARMALADE_UI
-            CIwColour cColor;
-            cColor.Set(0xff0000ff);
-            curPlace->setColor(cColor);
-#endif
             ret = unsortedPlaces.insert(curPlace);
             if(ret.second == false){
                 cout<<i<<" "<<j<<endl;
@@ -248,17 +243,7 @@ bool Field::getPathBetweenPlaces(Place* startPlace,Place* destPlace, Place*** ro
     while (nextPlace[nextIndex] != NULL)
     {
         Place* place = nextPlace[nextIndex];
-
-#ifdef QT_UI
-        place->setBrush(QBrush(Qt::red));
-#endif
         
-#ifdef MARMALADE_UI
-        CIwColour cColor;
-        cColor.Set(0xaacc00ff);
-        place->setColor(cColor);
-#endif
-
         pathPlaces.push_front(place);
 
         Point2i nxtPosPoint = place->getPosition();
@@ -266,11 +251,6 @@ bool Field::getPathBetweenPlaces(Place* startPlace,Place* destPlace, Place*** ro
 
         //std::cout<<"match "<<nextIndex<<std::endl;
     }
-
-#ifdef QT_UI
-        startPlace->setBrush(QBrush(Qt::green));
-        destPlace->setBrush(QBrush(Qt::yellow));
-#endif
 
     routeLength = pathPlaces.size();
     *routePlaces = new Place*[routeLength];
@@ -281,29 +261,6 @@ bool Field::getPathBetweenPlaces(Place* startPlace,Place* destPlace, Place*** ro
     {
         (*routePlaces)[i] = *pathIter;
     }
-
-    /*
-#ifdef QT_UI
-    for(unsigned i=0; i<this->height; i++)
-    {
-        //column
-        for(unsigned j=0; j<this->width; j++)
-        {
-            if(i%2 && j == this->width-1)
-                continue;
-            unsigned distance = distanceArray[i*width+j];
-            cout<<i<<" "<<j<<" "<<distance<<endl;
-
-            Place* place = &placeArray[i*width+j];
-
-            unsigned color = 255-distance*7;
-
-            place->setBrush(QBrush(QColor(color,0,0)));
-        }
-    }
-#endif
-*/
-
 
     delete []distanceArray;
     delete []nextPlace;
@@ -333,24 +290,10 @@ void Field::setPainter(QPainter *painter){
             {
                 entityPlace = i*width+j;
 
-                if(entityPlace > -1){
+                if(entityPlace > -1)
+                {
                     Place* p = &placeArray[entityPlace];
                     p->setBrush(QBrush(Qt::blue));
-
-                    /*
-                    if(p->getNeighbor(leftNeighbor) != NULL)
-                        p->getNeighbor(leftNeighbor)->setBrush(QBrush(Qt::magenta));
-                    if(p->getNeighbor(topLeftNeighbor) != NULL)
-                        p->getNeighbor(topLeftNeighbor)->setBrush(QBrush(Qt::lightGray));
-                    if(p->getNeighbor(topRightNeighbor) != NULL)
-                        p->getNeighbor(topRightNeighbor)->setBrush(QBrush(Qt::gray));
-                    if(p->getNeighbor(rightNeighbor) != NULL)
-                        p->getNeighbor(rightNeighbor)->setBrush(QBrush(Qt::yellow));
-                    if(p->getNeighbor(bottomRightNeighbor) != NULL)
-                        p->getNeighbor(bottomRightNeighbor)->setBrush(QBrush(Qt::darkYellow));
-                    if(p->getNeighbor(bottomLeftNeighbor) != NULL)
-                        p->getNeighbor(bottomLeftNeighbor)->setBrush(QBrush(Qt::darkRed));
-                        */
                 }
             }
         }
@@ -413,10 +356,7 @@ Place* Field::getPlaceForTouchPoint(Point2i tPos){
 void Field::Draw(float dTime){   
 
 #ifdef QT_UI
-
-    //painter->setBrush(this->brush);
     painter->drawRect(this->offset.x,this->offset.y+5,this->width*unit*sqrt(3),this->height*unit*1.5);
-
 #endif
 
     //row

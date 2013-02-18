@@ -75,35 +75,14 @@ Entity* Place::getNextEntity()
     return this->nextEntity;
 }
 
+void Place::serialize(ostream &os)
+{
+
+}
+
 void Place::getFreeNeighbors(char ** neighborIDArray, unsigned& size)
 {
     getFreeNeighbors(neighborIDArray, size, NULL);
-    /*
-    size = 0;
-    *neighborIDArray = NULL;
-    char tempArray[6];
-
-    for(unsigned i=0; i < 6; i++)
-    {
-        if(this->neighbors[i] != NULL)
-        {
-            if(this->neighbors[i]->entity == NULL)
-            {
-                tempArray[size] = (char)i;
-                size++;
-            }
-        }
-    }
-    if(size > 0)
-    {
-        char* array = NULL;
-        array = (char*)malloc(size*sizeof(char));
-        for(unsigned i = 0; i < size; i++)
-        {
-            array[i] = tempArray[i];
-        }
-        *neighborIDArray = array;
-    }*/
 }
 
 void Place::getFreeNeighbors(char** neighborIDArray, unsigned& size, Entity* ignorableEntity)
@@ -306,49 +285,12 @@ void Place::Draw(float dTime){
     painter->save();
     painter->translate(this->onScreenPos.x+offset.x, this->onScreenPos.y+offset.y);
 
-
-
-    //painter->drawPolygon(points, 6);
-
-
     for(unsigned i=0; i<6; i++){
 
         painter->drawLine(points2[i],center);
     }
 
     painter->restore();
-
-
-#endif
-
-#ifdef MARMALADE_UI
-    
-    CIwSVec2 Position(onScreenPos.x-offset.x, onScreenPos.y-offset.y);
-    
-    // Build the transform
-	// Set the rotation transform
-	Transform.SetRot(0);
-	// Scale the transform
-	Transform.ScaleRot(IW_GEOM_ONE);
-	// Translate the transform
-	Transform.SetTrans(Position);
-	// Set this transform as the active transform for Iw2D
-	Iw2DSetTransformMatrix(Transform);
-    
-    
-    Iw2DSetColour(this->color); // Set red
-    
-    static CIwSVec2 verts[6] = {
-        CIwSVec2(width, 0),
-        CIwSVec2(2*width, unit/2),
-        CIwSVec2(2*width, unit/2+unit),
-        CIwSVec2(width, 2*unit),
-        CIwSVec2(0, unit/2+unit),
-        CIwSVec2(0, unit/2)
-    };
-    
-    Iw2DDrawPolygon(verts, 6,true);
-    
 #endif
     
     if(this->entity != NULL){

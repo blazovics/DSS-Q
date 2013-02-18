@@ -3,13 +3,6 @@
 
 #include "common.h"
 
-#ifdef MARMALADE_UI
-
-#include "s3e.h"
-#include "Iw2D.h"
-
-#endif
-
 class RenderObject
 {
 public:

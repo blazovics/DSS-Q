@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+using namespace std;
+
 class Place;
 
 class Field
@@ -40,7 +42,7 @@ public:
 
     Point2i getOffset();
     void setOffset(Point2i offset);
-    
+
     ~Field();
 };
 

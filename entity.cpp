@@ -149,22 +149,9 @@ void Entity::Draw(float dTime)
     painter->save();
     painter->translate(placePos.x + offset.x, placePos.y + offset.y);
 
-    /*
-    painter->translate(50, 50);
-    painter->rotate(60.0);
-    painter->scale(0.6, 0.9);
-    painter->translate(-50, -50);
-    */
-
     painter->drawEllipse(QPoint(height,unit),(int)(unit/2),(int)(unit/2));
     painter->restore();
 
-#endif
-    
-#ifdef MARMALADE_UI
-    
-   
-    
 #endif
 
 }

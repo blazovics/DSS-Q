@@ -43,6 +43,8 @@ public slots:
     void pausePressed();
     void stepPressed();
     void stopPressed();
+    void savePressed();
+    void loadPressed();
     
 private:
     void paintEvent(QPaintEvent *event);

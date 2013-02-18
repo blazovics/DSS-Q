@@ -19,12 +19,14 @@ class GRGEntity : public Entity
     GRGState state;
     Place* rotationStartPlace;
 
+
 public:
     GRGEntity();
     void setTargetEntity(Entity* targetEntity);
     void Step();
     void AfterStep();
     void Draw(float dTime);
+    int getType();
 
     void setState(GRGState newState);
 };
