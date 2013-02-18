@@ -12,6 +12,9 @@ Scene::Scene()
     srand ( time(NULL) );
 
     this->field = NULL;
+    this->targetEntity = NULL;
+
+    this->runMode = runModePaused;
 }
 
 Scene::Scene(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsigned yOffset)
@@ -93,12 +96,36 @@ void Scene::setRunMode(SceneRunMode runMode)
      return this->entities;
  }
 
+ void Scene::setTargetEntity(TargetEntity* targetEntity, Point2i pos)
+ {
+     if(targetEntity == NULL)
+     {
+         return;
+     }
+
+     if(this->targetEntity != NULL)
+     {
+        delete this->targetEntity;
+     }
+
+     this->targetEntity = targetEntity;
+     this->targetEntity->setCurrentPlace(field->getPlaceAtPosition(pos));
+
+#ifdef QT_UI
+     if(this->targetEntity != NULL)
+     {
+         targetEntity->setPainter(painter);
+     }
+#endif
+
+ }
+
  TargetEntity* Scene::getTargetEntity()
  {
      return this->targetEntity;
  }
 
- void Scene::setField(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsigned yOffset)
+ void Scene::addField(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsigned yOffset)
  {
      if(this->field != NULL)
      {
@@ -132,7 +159,10 @@ void Scene::setPainter(QPainter *painter){
         ((Entity*)*it)->setPainter(painter);
     }
 
-    this->targetEntity->setPainter(painter);
+    if(this->targetEntity != NULL)
+    {
+        this->targetEntity->setPainter(painter);
+    }
 }
 
 #endif
@@ -172,7 +202,7 @@ void Scene::handleTouchEvent(Point2i touchPoint)
 
 void Scene::addEntityAtPosition(int type, Point2i point)
 {
-    Place* place = this->field->getPlaceForTouchPoint(point);
+    Place* place = this->field->getPlaceAtPosition(point);
 
     if(place->getEntity() != NULL)
         return;
@@ -184,10 +214,16 @@ void Scene::addEntityAtPosition(int type, Point2i point)
     case SWARM_ENTITY:
         newEntity = new SwarmEntity();
         ((SwarmEntity*)newEntity)->setTargetEntity(targetEntity);
+#ifdef QT_UI
+        newEntity->setBrush(QBrush(QColor(255,70,34)));
+#endif
         break;
     case GRG_ENTITY:
         newEntity = new GRGEntity();
         ((GRGEntity*)newEntity)->setTargetEntity(targetEntity);
+#ifdef QT_UI
+        newEntity->setBrush(QBrush(QColor(255,70,34)));
+#endif
         break;
     case TARGET_ENTITY:
         newEntity = new TargetEntity();

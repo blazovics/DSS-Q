@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'toolbarwidget.h'
 **
-** Created: Tue Feb 5 15:07:56 2013
+** Created: Mon Feb 18 20:38:41 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_ToolBarWidget[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,6 +35,8 @@ static const uint qt_meta_data_ToolBarWidget[] = {
       29,   14,   14,   14, 0x0a,
       44,   14,   14,   14, 0x0a,
       58,   14,   14,   14, 0x0a,
+      72,   14,   14,   14, 0x0a,
+      86,   14,   14,   14, 0x0a,
 
        0        // eod
 };
@@ -42,6 +44,7 @@ static const uint qt_meta_data_ToolBarWidget[] = {
 static const char qt_meta_stringdata_ToolBarWidget[] = {
     "ToolBarWidget\0\0playPressed()\0"
     "pausePressed()\0stepPressed()\0stopPressed()\0"
+    "savePressed()\0loadPressed()\0"
 };
 
 void ToolBarWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -54,6 +57,8 @@ void ToolBarWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 1: _t->pausePressed(); break;
         case 2: _t->stepPressed(); break;
         case 3: _t->stopPressed(); break;
+        case 4: _t->savePressed(); break;
+        case 5: _t->loadPressed(); break;
         default: ;
         }
     }
@@ -92,9 +97,9 @@ int ToolBarWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 6;
     }
     return _id;
 }

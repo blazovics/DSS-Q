@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'screenwidget.h'
 **
-** Created: Tue Feb 5 12:21:50 2013
+** Created: Mon Feb 18 20:38:40 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_ScreenWidget[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -36,6 +36,8 @@ static const uint qt_meta_data_ScreenWidget[] = {
       44,   13,   13,   13, 0x0a,
       59,   13,   13,   13, 0x0a,
       73,   13,   13,   13, 0x0a,
+      87,   13,   13,   13, 0x0a,
+     101,   13,   13,   13, 0x0a,
 
        0        // eod
 };
@@ -43,7 +45,7 @@ static const uint qt_meta_data_ScreenWidget[] = {
 static const char qt_meta_stringdata_ScreenWidget[] = {
     "ScreenWidget\0\0updateCaption()\0"
     "playPressed()\0pausePressed()\0stepPressed()\0"
-    "stopPressed()\0"
+    "stopPressed()\0savePressed()\0loadPressed()\0"
 };
 
 void ScreenWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -57,6 +59,8 @@ void ScreenWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 2: _t->pausePressed(); break;
         case 3: _t->stepPressed(); break;
         case 4: _t->stopPressed(); break;
+        case 5: _t->savePressed(); break;
+        case 6: _t->loadPressed(); break;
         default: ;
         }
     }
@@ -95,9 +99,9 @@ int ScreenWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }

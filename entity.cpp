@@ -3,6 +3,8 @@
 #include "logger.h"
 #include "field.h"
 
+#include <cmath>
+
 float Entity::aspect = sqrt(3)/2;
 
 Entity::Entity()

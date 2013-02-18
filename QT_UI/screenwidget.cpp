@@ -3,7 +3,9 @@
 #include "../field.h"
 #include "../entity.h"
 #include "../place.h"
-#include "../targetEntity.h"
+#include "../targetentity.h"
+#include "../grgentity.h"
+#include "../swarmentity.h"
 #include <QTimer>
 #include <QPushButton>
 #include <QDebug>
@@ -15,6 +17,8 @@
 #include <QTextStream>
 #include <QTranslator>
 #include <QObject>
+#include <QtXml/QDomDocument>
+#include <QtXml/QtXml>
 
 ScreenWidget::ScreenWidget(QWidget *parent) :
     QWidget(parent)
@@ -130,7 +134,87 @@ void ScreenWidget::savePressed()
 
 void ScreenWidget::loadPressed()
 {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Scene"), "",tr("DSS XML Scene File (*.xml);;All Files (*)"));
 
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+    else
+    {
+        QDomDocument doc("loadedscene");
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            return;
+        }
+
+        if (!doc.setContent(&file))
+        {
+            file.close();
+            return;
+        }
+        file.close();
+
+        QDomElement scene = doc.documentElement();
+
+        qDebug()<<scene.text();
+
+        QDomNode field=scene.firstChildElement("field");
+        if (field.isElement())
+        {
+            this->scene->addField(field.firstChildElement("width").text().toUInt(),field.firstChildElement("height").text().toUInt());
+        }
+        QDomNode targetEntity = scene.firstChildElement("targetEntity");
+        if (targetEntity.isElement())
+        {
+
+            TargetEntity* newTargetEntity = new TargetEntity();
+            Point2i targetPos(targetEntity.firstChildElement("x").text().toInt(),targetEntity.firstChildElement("y").text().toInt());
+            this->scene->setTargetEntity(newTargetEntity,targetPos);
+        }
+        QDomNode entities = scene.firstChildElement("entities");
+        if (entities.isElement())
+        {
+            QDomNodeList entityList =entities.toElement().elementsByTagName("entity");
+
+            for(int i=0;i<entityList.count();i++)
+            {
+                QDomElement entity = entityList.at(i).toElement();
+
+                int type = entity.firstChildElement("type").text().toInt();
+                Point2i entityPos(entity.firstChildElement("x").text().toInt(),entity.firstChildElement("y").text().toInt());
+
+                this->scene->addEntityAtPosition(type,entityPos);
+            }
+        }
+/*
+            for(int i=0;i<fieldList.count();i++)
+            {
+                QDomElement field = fieldList.at(i).toElement();
+
+                qDebug()<<field.attribute("width");
+                qDebug()<<field.attribute("height");
+
+
+                QDomNodeList lll=e1.elementsByTagName("a");
+                qDebug(QString::number(lll.count()).toAscii());
+
+                for(int j=0;j<lll.count();j++)
+                {
+                    QDomElement e2 = lll.at(j).toElement();
+                    qDebug(e2.tagName().toAscii()+" "+e2.attribute("ITEM").toAscii());
+                    QDomNodeList llll=e2.elementsByTagName("b");
+                    for(int k=0;k<llll.count();k++)
+                    {
+                        QDomElement e3 = llll.at(k).toElement();
+                        qDebug(e3.tagName().toAscii()+" "+e3.text().toAscii());
+                    }
+                }
+
+            }
+            */
+    }
 }
 
 void ScreenWidget::setScene(Scene *scene){

@@ -760,23 +760,4 @@ void SwarmEntity::Draw(float dTime)
     painter->restore();
 
 #endif
-    
-#ifdef MARMALADE_UI
-    CIwSVec2 Position(placePos.x-offset.x, placePos.y-offset.y);
-
-    // Build the transform
-	// Set the rotation transform
-	Transform.SetRot(0);
-	// Scale the transform
-	Transform.ScaleRot(IW_GEOM_ONE);
-	// Translate the transform
-	Transform.SetTrans(Position);
-	// Set this transform as the active transform for Iw2D
-	Iw2DSetTransformMatrix(Transform);
-    
-    Iw2DSetColour(0xffffffff); // Set red
-    
-    Iw2DFillArc(CIwSVec2(height, unit), CIwSVec2((unit/2), (unit/2)), 0, IW_ANGLE_2PI);
-
-#endif
 }

@@ -37,7 +37,7 @@ public:
     Scene();
     Scene(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset = 0, unsigned yOffset = 0);
 
-    void setField(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset = 0, unsigned yOffset = 0);
+    void addField(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset = 0, unsigned yOffset = 0);
 
     void addEntityAtPosition(int type, Point2i point);
 
@@ -46,7 +46,11 @@ public:
     void handleTouchEvent(Point2i touchPoint);
 
     set<Entity*> getEntities();
+
+    void setTargetEntity(TargetEntity* targetEntity, Point2i pos);
     TargetEntity* getTargetEntity();
+
+
 
     Field* getField();
 
