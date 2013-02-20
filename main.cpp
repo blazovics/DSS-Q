@@ -39,6 +39,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(toolbarWidget.getPlayButton(), SIGNAL(released()), &screenWidget, SLOT(playPressed()));
     QObject::connect(toolbarWidget.getPauseButton(), SIGNAL(released()), &screenWidget, SLOT(pausePressed()));
     QObject::connect(toolbarWidget.getStepButton(), SIGNAL(released()), &screenWidget, SLOT(stepPressed()));
+    QObject::connect(toolbarWidget.getStartButton(), SIGNAL(released()), &screenWidget, SLOT(startPressed()));
     QObject::connect(toolbarWidget.getStopButton(), SIGNAL(released()), &screenWidget, SLOT(stopPressed()));
 
     QObject::connect(toolbarWidget.getSaveButton(), SIGNAL(released()), &screenWidget, SLOT(savePressed()));

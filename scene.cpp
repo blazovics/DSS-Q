@@ -81,6 +81,11 @@ Scene::Scene(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsign
     this->runMode = runModePaused;
 }
 
+void Scene::startMeasure()
+{
+    this->stepCount = 0;
+}
+
 void Scene::setRunMode(SceneRunMode runMode)
 {
     this->runMode = runMode;
@@ -127,6 +132,14 @@ void Scene::setRunMode(SceneRunMode runMode)
 
  void Scene::addField(unsigned fieldWidth, unsigned fieldHeight, unsigned xOffset, unsigned yOffset)
  {
+     set<Entity*>::iterator it;
+
+     for ( it=entities.begin() ; it != entities.end(); it++ )
+     {
+         delete ((Entity*)*it);
+     }
+     entities.clear();
+
      if(this->field != NULL)
      {
         delete this->field;
@@ -293,10 +306,19 @@ void Scene::Step()
 
         Place::entityDistance(entityPlace,targetPlace,distance,nType);
 
-        trajectoryFillCount[distance]++;
+        if(distance < 1)
+        {
+            cout<<"Error"<<endl;
+        }
+
+        trajectoryFillCount[distance-1]++;
     }
 
-    int outermostUnFilledTrajectory = entities.size();
+    for(unsigned i=0; i<entities.size(); i++)
+    {
+        cout<<trajectoryFillCount[i]<<" ";
+    }
+    cout<<endl;
 
     for(unsigned i=0; i<entities.size(); i++)
     {
@@ -308,10 +330,39 @@ void Scene::Step()
                 outerEntities += trajectoryFillCount[j];
             }
             if(outerEntities == 0)
+            {
+                //caclucalte statistics
+
+                cout<<"Step Circle Count: "<<stepCount<<endl;
+
+                unsigned overallStepCount;
+
+                cout<<"Entitiy step count: ";
+                for ( it=entities.begin() ; it != entities.end(); it++ )
+                {
+                    unsigned entityStepCount = ((Entity*)*it)->getStepCount();
+                    overallStepCount += entityStepCount;
+                    cout<<entityStepCount<<" ";
+                }
+                cout<<endl;
+
+                cout<<"Overall step count: "<<overallStepCount<<endl;
+
+                cout<<"Average step count: "<<overallStepCount/entities.size()<<endl;
+
                 return;
+            }
+            else
+            {
+                break;
+            }
+
         }
 
     }
+
+    //increase step count
+    this->stepCount++;
 
     delete trajectoryFillCount;
 
@@ -339,6 +390,12 @@ void Scene::Step()
     {
         Place* desiredPlace = ((Entity*)*it)->getDesiredPlace();
         desiredPlace->setNextEntity(((Entity*)*it));
+
+        //Probe
+        Place* currentPlace = ((Entity*)*it)->getCurrentPlace();
+        if(currentPlace != desiredPlace)
+            ((Entity*)*it)->increaseStepCount();
+
         ((Entity*)*it)->setCurrentPlace(desiredPlace,true);
         desiredPlace->setNextEntity(NULL);
     }

@@ -13,6 +13,8 @@ Entity::Entity()
     this->desiredPlace = NULL;
 
     this->animating = false;
+
+    this->stepCount = 0;
 }
 
 Entity::~Entity()
@@ -23,6 +25,21 @@ Entity::~Entity()
 void Entity::Step()
 {
     this->desiredPlace = this->currentPlace;
+}
+
+unsigned Entity::getStepCount()
+{
+    return this->stepCount;
+}
+
+void Entity::setStepCount(unsigned stepCount)
+{
+    this->stepCount = stepCount;
+}
+
+void Entity::increaseStepCount()
+{
+    this->stepCount++;
 }
 
 void Entity::AfterStep()
@@ -39,7 +56,7 @@ void Entity::setCurrentPlace(Place* place, bool forced)
         //if we would like to place the entity onto the same place
         if(this->currentPlace != NULL  && this->currentPlace == place)
         {
-            std::cout<<"Placement error"<<std::endl;
+            //std::cout<<"Placement error"<<std::endl;
             return;
         }
         

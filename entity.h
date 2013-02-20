@@ -22,6 +22,8 @@ protected:
     
     static float aspect;
 
+    unsigned stepCount;
+
 public:
     Entity();
     ~Entity();
@@ -33,6 +35,10 @@ public:
     Place* getDesiredPlace();
     
     bool getAnimating();
+
+    unsigned getStepCount();
+    void setStepCount(unsigned stepCount);
+    void increaseStepCount();
 
     virtual void Draw(float dTime);
     virtual void Step();

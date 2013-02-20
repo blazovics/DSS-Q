@@ -27,6 +27,8 @@ class Scene
 
     SceneRunMode runMode;
 
+    unsigned stepCount;
+
 #ifdef QT_UI
     QPainter* painter;
 public:
@@ -50,7 +52,7 @@ public:
     void setTargetEntity(TargetEntity* targetEntity, Point2i pos);
     TargetEntity* getTargetEntity();
 
-
+    void startMeasure();
 
     Field* getField();
 

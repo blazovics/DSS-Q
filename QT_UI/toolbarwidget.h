@@ -11,6 +11,7 @@ class ToolBarWidget : public QWidget
     QPushButton* playButton;
     QPushButton* pauseButton;
     QPushButton* stepButton;
+    QPushButton* startButton;
     QPushButton* stopButton;
     QPushButton* saveButton;
     QPushButton* loadButton;
@@ -21,6 +22,7 @@ public:
     QPushButton* getPlayButton();
     QPushButton* getPauseButton();
     QPushButton* getStepButton();
+    QPushButton* getStartButton();
     QPushButton* getStopButton();
     QPushButton* getSaveButton();
     QPushButton* getLoadButton();
@@ -32,6 +34,7 @@ public slots:
     void playPressed();
     void pausePressed();
     void stepPressed();
+    void startPressed();
     void stopPressed();
     void savePressed();
     void loadPressed();

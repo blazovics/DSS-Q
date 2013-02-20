@@ -10,6 +10,8 @@ ToolBarWidget::ToolBarWidget(QWidget *parent) :
 
     this->stepButton = new QPushButton("&Step", this);
 
+    this->startButton = new QPushButton("&Start", this);
+
     this->stopButton = new QPushButton("&Stop", this);
 
     this->saveButton = new QPushButton("&Save", this);
@@ -21,6 +23,7 @@ ToolBarWidget::ToolBarWidget(QWidget *parent) :
     hbox->addWidget(this->playButton);
     hbox->addWidget(this->pauseButton);
     hbox->addWidget(this->stepButton);
+    hbox->addWidget(this->startButton);
     hbox->addWidget(this->stopButton);
     hbox->addWidget(this->saveButton);
     hbox->addWidget(this->loadButton);
@@ -28,14 +31,18 @@ ToolBarWidget::ToolBarWidget(QWidget *parent) :
     QObject::connect(this->playButton, SIGNAL(released()), this, SLOT(playPressed()));
     QObject::connect(this->pauseButton, SIGNAL(released()), this, SLOT(pausePressed()));
     QObject::connect(this->stepButton, SIGNAL(released()), this, SLOT(stepPressed()));
+    QObject::connect(this->startButton, SIGNAL(released()), this, SLOT(startPressed()));
     QObject::connect(this->stopButton, SIGNAL(released()), this, SLOT(stopPressed()));
     QObject::connect(this->saveButton, SIGNAL(released()), this, SLOT(savePressed()));
     QObject::connect(this->loadButton, SIGNAL(released()), this, SLOT(loadPressed()));
 
-    this->playButton->setEnabled(true);
+    this->playButton->setEnabled(false);
     this->pauseButton->setEnabled(false);
+
+    this->startButton->setEnabled(true);
+
     this->stopButton->setEnabled(false);
-    this->stepButton->setEnabled(true);
+    this->stepButton->setEnabled(false);
 
     this->saveButton->setEnabled(true);
     this->loadButton->setEnabled(true);
@@ -76,15 +83,30 @@ void ToolBarWidget::stepPressed()
     this->loadButton->setEnabled(false);
 }
 
-void ToolBarWidget::stopPressed()
+void ToolBarWidget::startPressed()
 {
     this->playButton->setEnabled(true);
     this->pauseButton->setEnabled(false);
-    this->stopButton->setEnabled(false);
+
+    this->startButton->setEnabled(false);
+
+    this->stopButton->setEnabled(true);
     this->stepButton->setEnabled(true);
 
     this->saveButton->setEnabled(false);
     this->loadButton->setEnabled(false);
+}
+
+void ToolBarWidget::stopPressed()
+{
+    this->playButton->setEnabled(false);
+    this->pauseButton->setEnabled(false);
+    this->startButton->setEnabled(true);
+    this->stopButton->setEnabled(false);
+    this->stepButton->setEnabled(false);
+
+    this->saveButton->setEnabled(true);
+    this->loadButton->setEnabled(true);
 }
 
 void ToolBarWidget::savePressed()
@@ -110,6 +132,11 @@ QPushButton* ToolBarWidget::getPauseButton()
 QPushButton* ToolBarWidget::getStepButton()
 {
     return this->stepButton;
+}
+
+QPushButton* ToolBarWidget::getStartButton()
+{
+    return this->startButton;
 }
 
 QPushButton* ToolBarWidget::getStopButton()

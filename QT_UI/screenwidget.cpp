@@ -66,6 +66,11 @@ void ScreenWidget::stepPressed()
     this->scene->setRunMode(runModeStepping);
 }
 
+void ScreenWidget::startPressed()
+{
+    this->scene->startMeasure();
+}
+
 void ScreenWidget::stopPressed()
 {
     this->scene->setRunMode(runModePaused);

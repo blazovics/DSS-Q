@@ -42,6 +42,7 @@ public slots:
     void playPressed();
     void pausePressed();
     void stepPressed();
+    void startPressed();
     void stopPressed();
     void savePressed();
     void loadPressed();
