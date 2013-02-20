@@ -276,6 +276,45 @@ void Scene::Step()
     if(isAnimating || (this->runMode != runModeContinous && this->runMode != runModeStepping))
         return;
 
+    //check stop condition
+    unsigned *trajectoryFillCount = new unsigned[entities.size()];
+
+    for(unsigned i=0; i<entities.size(); i++)
+        trajectoryFillCount[i] = 0;
+
+    for ( it=entities.begin() ; it != entities.end(); it++ )
+    {
+        Entity* p = (Entity*)*it;
+        Place* entityPlace = p->getCurrentPlace();
+        Place* targetPlace = this->targetEntity->getCurrentPlace();
+
+        neighborhoodType nType = same;
+        unsigned distance = -1;
+
+        Place::entityDistance(entityPlace,targetPlace,distance,nType);
+
+        trajectoryFillCount[distance]++;
+    }
+
+    int outermostUnFilledTrajectory = entities.size();
+
+    for(unsigned i=0; i<entities.size(); i++)
+    {
+        if(trajectoryFillCount[i] < i*6+6)
+        {
+            int outerEntities = 0;
+            for(int j=i+1; j<entities.size(); j++)
+            {
+                outerEntities += trajectoryFillCount[j];
+            }
+            if(outerEntities == 0)
+                return;
+        }
+
+    }
+
+    delete trajectoryFillCount;
+
     //Move the others
 
     this->field->cleanNextEntities();
