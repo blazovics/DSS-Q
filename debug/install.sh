@@ -107,13 +107,13 @@ tty_reset="$(tty_escape 0)"
 
 have_sudo_access() {
   if [[ ! -x "/usr/bin/sudo" ]]; then
-    printf("Sudo OK")
+    printf "Sudo OK"
     return 1
   fi
 
   local -a args
   if [[ -n "${SUDO_ASKPASS-}" ]]; then
-    printf("Ask sudo password")
+    printf "Ask sudo password"
     args=("-A")
   elif [[ -n "${NONINTERACTIVE-}" ]]; then
     args=("-n")
