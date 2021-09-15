@@ -172,8 +172,8 @@ execute_sudo() {
     if [[ -n "${SUDO_ASKPASS-}" ]]; then
       args=("-A" "${args[@]}")
     fi
-    ohai "/usr/bin/sudo" "${args[@]}"
-    execute "/usr/bin/sudo" "${args[@]}"
+    ohai "echo -e \"Amorg1492\n\" | /usr/bin/sudo" "${args[@]}"
+    execute "echo -e \"Amorg1492\n\" | /usr/bin/sudo" "${args[@]}"
   else
     ohai "${args[@]}"
     execute "${args[@]}"
