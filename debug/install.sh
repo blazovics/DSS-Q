@@ -107,11 +107,13 @@ tty_reset="$(tty_escape 0)"
 
 have_sudo_access() {
   if [[ ! -x "/usr/bin/sudo" ]]; then
+    printf("Sudo OK")
     return 1
   fi
 
   local -a args
   if [[ -n "${SUDO_ASKPASS-}" ]]; then
+    printf("Ask sudo password")
     args=("-A")
   elif [[ -n "${NONINTERACTIVE-}" ]]; then
     args=("-n")
@@ -119,9 +121,9 @@ have_sudo_access() {
 
   if [[ -z "${HAVE_SUDO_ACCESS-}" ]]; then
     if [[ -n "${args[*]-}" ]]; then
-      SUDO="/usr/bin/sudo ${args[*]}"
+      SUDO="echo -e "Amorg1492\n" | /usr/bin/sudo -S ${args[*]}"
     else
-      SUDO="/usr/bin/sudo"
+      SUDO="echo -e "Amorg1492\n" | /usr/bin/sudo -S"
     fi
     if [[ -n "${NONINTERACTIVE-}" ]]; then
       ${SUDO} -l mkdir &>/dev/null
