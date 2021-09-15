@@ -1,4 +1,6 @@
 #!/bin/bash
+
+HOME=/Users/admin
 set -u
 
 abort() {
