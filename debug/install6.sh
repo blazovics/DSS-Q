@@ -173,7 +173,7 @@ execute_sudo() {
       args=("-A" "${args[@]}")
     fi
     ohai "/usr/bin/sudo" "${args[@]}"
-    execute "echo -e \"Amorg1492\n\" | /usr/bin/sudo -S " "${args[@]}"
+    execute "/usr/bin/sudo" "${args[@]}"
   else
     ohai "${args[@]}"
     execute "${args[@]}"
